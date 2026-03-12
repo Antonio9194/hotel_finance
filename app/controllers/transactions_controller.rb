@@ -12,7 +12,7 @@ class TransactionsController < ApplicationController
   end
 
   def create
-    @transaction.new(transaction_params)
+    @transaction = Transaction.new(transaction_params)
     if @transaction.save
       redirect_to root_path
     else
@@ -25,6 +25,9 @@ class TransactionsController < ApplicationController
   end
 
   def destroy
+    @transaction = Transaction.find(params[:id])
+    @transaction.destroy
+    redirect_to root_path
   end
 
   private

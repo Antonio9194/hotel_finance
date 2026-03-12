@@ -1,13 +1,70 @@
-<h1>Transactions</h1>
-<%= link_to "Add transaction", new_transaction_path %>
-<% if @transactions.exists? %>
-  <% @transactions.each do |transaction|%>
-    <p>
-      <%= transaction.amount %>
-      <%= transaction.type %>
-      <%= transaction.category %>
-      <%= transaction.description %>
-      <%= transaction.date %>
-    </p>
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">Transactions</h1>
+    <%= link_to "Add Transaction", new_transaction_path, class: "btn btn-primary" %>
+  </div>
+
+  <% if @transactions.exists? %>
+
+    <div class="table-responsive">
+      <table class="table table-striped table-hover align-middle">
+
+        <thead class="table-dark">
+          <tr>
+            <th>Amount</th>
+            <th>Type</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% @transactions.each do |transaction| %>
+            <tr>
+
+              <td>
+                <strong>
+                  <%= number_to_currency(transaction.amount, unit: "¥", precision: 0) %>
+                </strong>
+              </td>
+
+              <td>
+                <span class="badge bg-<%= transaction.income? ? "success" : "danger" %>">
+                  <%= transaction.transaction_type.capitalize %>
+                </span>
+              </td>
+
+              <td><%= transaction.category %></td>
+
+              <td class="text-muted">
+                <%= transaction.description %>
+              </td>
+
+              <td>
+                <%= transaction.date %>
+              </td>
+
+              <td>
+                <%= link_to "Delete",
+                    transaction_path(transaction),
+                    data: { turbo_method: :delete, turbo_confirm: "Delete?" },
+                    class: "btn btn-danger btn-sm" %>
+              </td>
+
+            </tr>
+          <% end %>
+        </tbody>
+
+      </table>
+    </div>
+
+  <% else %>
+
+    <div class="alert alert-light border text-center mt-4">
+      No transactions yet.
+    </div>
+
   <% end %>
-<% end %>
+</div>

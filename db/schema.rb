@@ -10,10 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_03_12_091235) do
+ActiveRecord::Schema[7.1].define(version: 2026_03_12_095029) do
   create_table "transactions", force: :cascade do |t|
     t.decimal "amount"
-    t.string "transaction_type"
+    t.integer "transaction_type"
     t.string "category"
     t.string "description"
     t.date "date"

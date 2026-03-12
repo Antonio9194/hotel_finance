@@ -1,2 +1,39 @@
-<h1>Transaction#new</h1>
-<p>Find me in app/views/transaction/new.html.erb</p>
+<div class="container mt-5">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">New Transaction</h1>
+    <%= link_to "Back to Transactions", root_path, class: "btn btn-outline-secondary" %>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+
+      <%= simple_form_for @transaction do |f| %>
+
+        <div class="row">
+          <div class="col-md-6">
+            <%= f.input :amount %>
+          </div>
+
+          <div class="col-md-6">
+            <%= f.input :transaction_type,
+              collection: Transaction.transaction_types.keys %>
+          </div>
+        </div>
+
+        <%= f.input :category %>
+
+        <%= f.input :description %>
+
+        <%= f.input :date %>
+
+        <div class="mt-4">
+          <%= f.button :submit, "Add Transaction", class: "btn btn-primary" %>
+        </div>
+
+      <% end %>
+
+    </div>
+  </div>
+
+</div>
