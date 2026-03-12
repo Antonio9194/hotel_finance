@@ -1,0 +1,13 @@
+<h1>Transactions</h1>
+<%= link_to "Add transaction", new_transaction_path %>
+<% if @transactions.exists? %>
+  <% @transactions.each do |transaction|%>
+    <p>
+      <%= transaction.amount %>
+      <%= transaction.type %>
+      <%= transaction.category %>
+      <%= transaction.description %>
+      <%= transaction.date %>
+    </p>
+  <% end %>
+<% end %>
