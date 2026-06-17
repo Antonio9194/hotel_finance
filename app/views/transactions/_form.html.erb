@@ -1,0 +1,18 @@
+<%= link_to "← Back", root_path, class: "back-link" %>
+
+<h2><%= @transaction.new_record? ? "New Transaction" : "Edit Transaction" %></h2>
+
+<div class="card" style="margin-top: 1.5rem;">
+  <%= simple_form_for @transaction do |f| %>
+    <div class="form-row">
+      <div><%= f.input :amount, input_html: { placeholder: "0" } %></div>
+      <div><%= f.input :transaction_type, collection: Transaction.transaction_types.keys, include_blank: false %></div>
+    </div>
+    <%= f.input :category, collection: Transaction.categories.keys.map { |k| [k.humanize, k] }, include_blank: false %>
+    <%= f.input :description, input_html: { placeholder: "Optional notes..." } %>
+    <%= f.input :date %>
+    <div class="form-actions">
+      <%= f.button :submit, f.object.new_record? ? "Add Transaction" : "Update Transaction" %>
+    </div>
+  <% end %>
+</div>

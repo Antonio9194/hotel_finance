@@ -1,102 +1,71 @@
-<div class="container mt-5 mb-5">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="mb-0 fw-bold">Transactions</h1>
-    <%= link_to "Add Transaction", new_transaction_path, class: "btn btn-primary shadow-sm" %>
+<div class="page-header">
+  <div>
+    <div class="brand-name">Morikoya Hotel</div>
+    <div class="brand-sub">Transactions</div>
   </div>
-  <div class="container mb-4">
-    <div class="row g-3">
-      <div class="col">
-        <div class="card border-0 shadow-sm bg-success bg-opacity-10">
-          <div class="card-body">
-            <h6 class="text-success">Monthly Income</h6>
-            <h2 class="fw-bold text-success">
-              <%= number_to_currency(@income, unit: "¥", precision: 0) %>
-            </h2>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card border-0 shadow-sm bg-danger bg-opacity-10">
-          <div class="card-body">
-            <h6 class="text-danger">Monthly Expense</h6>
-            <h2 class="fw-bold text-danger">
-              <%= number_to_currency(@expense, unit: "¥", precision: 0) %>
-            </h2>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card border-0 shadow-sm bg-dark bg-opacity-10">
-          <div class="card-body">
-            <h6 class="text-dark">Profit</h6>
-            <h2 class="fw-bold text-dark">
-              <%= number_to_currency(@profit, unit: "¥", precision: 0) %>
-            </h2>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row justify-content-center mb-4">
-    <div class="card col-4 border-0 shadow-sm bg-light pt-2">
-      <h6 class="text-center text-muted">Monthly Category Expenses</h6>
-      <div class="card-body">
-        <% @categories_expenses.each do |category, total| %>
-          <p class="mb-2 d-flex justify-content-between">
-            <span class="fw-semibold"><%= category %></span>
-            <span class="text-danger">
-              <%= number_to_currency(total, unit: "¥", precision: 0) %>
-            </span>
-          </p>
-        <% end %>
-      </div>
-    </div>
-  </div>
-  <% if @monthly_transactions.exists? %>
-    <div class="table-responsive shadow-sm rounded">
-      <table class="table table-hover align-middle">
-        <thead class="table-dark">
-          <tr>
-            <th>Amount</th>
-            <th>Type</th>
-            <th>Category</th>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @monthly_transactions.each do |transaction| %>
-            <tr>
-              <td>
-                <strong>
-                  <%= number_to_currency(transaction.amount, unit: "¥", precision: 0) %>
-                </strong>
-              </td>
-              <td>
-                <span class="badge bg-<%= transaction.income? ? "success" : "danger" %>">
-                  <%= transaction.transaction_type.capitalize %>
-                </span>
-              </td>
-              <td><%= transaction.category %></td>
-              <td class="text-muted">
-                <%= transaction.description %>
-              </td>
-              <td><%= transaction.date %></td>
-              <td>
-                <%= link_to "Delete",
-                    transaction_path(transaction),
-                    data: { turbo_method: :delete, turbo_confirm: "Delete?" },
-                    class: "btn btn-danger btn-sm" %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-  <% else %>
-    <div class="alert alert-light border text-center mt-4">
-      No transactions yet.
-    </div>
-  <% end %>
+  <%= link_to "Add Transaction", new_transaction_path, class: "btn-primary" %>
 </div>
+<div class="metrics-grid">
+  <div class="metric-card metric-income">
+    <div class="metric-label">Monthly Income</div>
+    <div class="metric-value"><%= number_to_currency(@income, unit: "¥", precision: 0) %></div>
+  </div>
+  <div class="metric-card metric-expense">
+    <div class="metric-label">Monthly Expense</div>
+    <div class="metric-value"><%= number_to_currency(@expense, unit: "¥", precision: 0) %></div>
+  </div>
+  <div class="metric-card metric-profit">
+    <div class="metric-label">Profit</div>
+    <div class="metric-value"><%= number_to_currency(@profit, unit: "¥", precision: 0) %></div>
+  </div>
+</div>
+<% if @categories_expenses.any? %>
+  <div class="card">
+    <div class="card-title">Monthly Category Expenses</div>
+    <% @categories_expenses.each do |category, total| %>
+      <div class="category-row">
+        <span class="category-name"><%= category.to_s.humanize %></span>
+        <span class="category-amount"><%= number_to_currency(total, unit: "¥", precision: 0) %></span>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+<% if @monthly_transactions.exists? %>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Amount</th>
+          <th>Type</th>
+          <th>Category</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @monthly_transactions.each do |transaction| %>
+          <tr>
+            <td><%= number_to_currency(transaction.amount, unit: "¥", precision: 0) %></td>
+            <td>
+              <span class="badge <%= transaction.income? ? "badge-income" : "badge-expense" %>">
+                <%= transaction.transaction_type.capitalize %>
+              </span>
+            </td>
+            <td><%= transaction.category.to_s.humanize %></td>
+            <td><%= transaction.description %></td>
+            <td><%= transaction.date.strftime("%b %d, %Y") %></td>
+            <td style="display: flex; gap: 0.5rem;">
+              <%= link_to "Edit", edit_transaction_path(transaction), class: "btn-ghost" %>
+              <%= link_to "Delete", transaction_path(transaction),
+                  data: { turbo_method: :delete, turbo_confirm: "Delete this transaction?" },
+                  class: "btn-danger" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <div class="empty-state">No transactions this month.</div>
+<% end %>
