@@ -8,7 +8,11 @@ class TransactionsController < ApplicationController
     @income = @monthly_transactions.income.sum(:amount)
     @expense = @monthly_transactions.expense.sum(:amount)
     @profit = @income - @expense
-    @categories_expenses = @monthly_transactions.expense.group(:category).sum(:amount)
+    @categories_expenses = Transaction
+      .where(date: Date.current.beginning_of_month..Date.current.end_of_month)
+      .expense
+      .group(:category)
+      .sum(:amount)
   end
 
   def show
