@@ -9,8 +9,12 @@ gem "rails", "~> 7.1.5", ">= 7.1.5.2"
 gem "sprockets-rails"
 gem 'simple_form', '~> 5.3'
 
-# Use sqlite3 as the database for Active Record
-gem "sqlite3", ">= 1.4"
+# Use PostgreSQL in production
+gem "pg", "~> 1.1"
+
+group :development, :test do
+  gem "sqlite3", ">= 1.4"
+end
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
@@ -26,6 +30,7 @@ gem "stimulus-rails"
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
+gem "devise"
 
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
