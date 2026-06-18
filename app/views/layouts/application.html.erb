@@ -10,6 +10,12 @@
     <%= javascript_importmap_tags %>
   </head>
   <body>
+    <% if user_signed_in? %>
+      <nav style="display: flex; justify-content: flex-end; padding: 0.75rem 2rem; border-bottom: 1px solid var(--border);">
+        <span style="color: var(--text-muted); font-size: 0.875rem; margin-right: 1rem;"><%= current_user.email %></span>
+        <%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete }, class: "btn-ghost", style: "font-size: 0.875rem; padding: 0.4rem 1rem;" %>
+      </nav>
+    <% end %>
     <%= render "shared/flash" %>
     <%= yield %>
   </body>
